@@ -2,6 +2,7 @@
 # 0 = empty space
 
 import sys
+import copy
 
 # return true if item doesn't exist in row, false otherwise
 def check_row (board, row, value):
@@ -33,42 +34,49 @@ def can_place_val(board, row, col, value):
                 return True
     return False
 
-# return the next empty square, if non existent, return None
-def find_empty_square(board):
+# find all possibilities for each square and add to map
+def find_possibilities(board):
+    map = {}
     for r, row in enumerate(board):
         for c, item in enumerate(row):
             if item == 0:
-                return [r, c]
-    return [None, None]
+                coord = (r, c)
+                possible_vals = []
+                for val in range(1,10):
+                    if can_place_val(board, r, c, val):
+                        possible_vals.append(val)
+                map[coord] = possible_vals
+    return map
 
-# try and fill the spot, if can't, return None
-def fill_spot(board, row, col):
-    for val in range(1,9):
-        if can_place_val(board, row, col, val):
-            board[row][col] = val
-            return board
-    return [[None]]
+# take in 9 by 9 array and list of tried squares
+def solve_array(board, guessed_boards, index):
+    map = find_possibilities(board)
 
-# take in 9 by 9 array
-def solve_array(board, filled_squares): # filled squares is a list of filled squares
-    cur_board = board
-    cur = filled_squares[-1]
-    print(cur)
-    
     # check if solved
-    if cur[0] == None:
-        return cur_board
+    if len(map) == 0:
+        return board
+
+    # find best possible square to guess for
+    sorted_map = sorted(map, key=lambda key: len(map[key]))
+    coord = sorted_map[0]
+    value = map[coord]
+    row = coord[0]
+    col = coord[1]
+
+    # check if a square failed i.e. must backtrack
+    if len(value) == 0 or len(value) < index+1:
+        board, index = guessed_boards.pop()
+        return solve_array(board, guessed_boards, index)
     
-    # try and put a value in the next empty square, if works, return new board
-    new_board = fill_spot(cur_board, cur[0], cur[1])
-    if new_board[0][0] != None:
-        new = find_empty_square(cur_board)
-        filled_squares.append(new)
-        return solve_array(new_board, filled_squares)
-    
-    # if no value could fit in the current square, try prev square again with new val
-    filled_squares.pop()
-    return solve_array(cur_board, filled_squares)
+     # if more than one value, add to guessed_boards for later
+    if len(value) > 1:
+        new_index = index+1
+        guessed_boards.append([board, new_index])
+
+    # try and put a value in the best possible square, return new board
+    new_board = copy.deepcopy(board)
+    new_board[row][col] = value[index]
+    return solve_array(new_board, guessed_boards, 0)
 
 def main():
     # ensure 1 argument
@@ -98,9 +106,6 @@ if __name__ == "__main__":
             [0, 0, 0, 2, 8, 0, 0, 3, 0]]
     
     #print(can_place_val(input, 0, 0, 4))
-    first = find_empty_square(input)
-    filled_squares = [first]
-    final = (solve_array(input, filled_squares))
+    guessed_boards = []
+    final = (solve_array(input, guessed_boards, 0))
     print(final)
-    
-    # main
