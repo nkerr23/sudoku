@@ -1,8 +1,9 @@
-# input 9 by 9 array of nums
+# input n by n array of nums
 # 0 = empty space
 
 import sys
 import copy
+import math
 
 # return true if item doesn't exist in row, false otherwise
 def check_row (board, row, value):
@@ -18,39 +19,42 @@ def check_column (board, col, value):
             return False
     return True
 
-# return true if item doesn't exist in 3x3 square, false otherwise
-def check_square (board, row, col, value):
-    for i in range((row%3)*3, 3):
-        for j in range((col%3)*3, 3):
+# return true if item doesn't exist in root(n)xroot(n) square, false otherwise
+def check_square (board, row, col, value, n):
+    size = int(math.sqrt(n))
+    row_start = (row//size)*size
+    col_start = (col//size)*size
+    for i in range(row_start, row_start+size):
+        for j in range(col_start, col_start+size):
             if board[i][j] == value:
                 return False
     return True
 
 # return true if can place the num in that square, false otherwise
-def can_place_val(board, row, col, value):
+def can_place_val(board, row, col, value, n):
     if check_row(board, row, value):
         if check_column(board, col, value):
-            if check_square(board, row, col, value):
+            if check_square(board, row, col, value, n):
                 return True
     return False
 
 # find all possibilities for each square and add to map
-def find_possibilities(board):
+def find_possibilities(board, n):
     map = {}
     for r, row in enumerate(board):
         for c, item in enumerate(row):
             if item == 0:
                 coord = (r, c)
                 possible_vals = []
-                for val in range(1,10):
-                    if can_place_val(board, r, c, val):
+                for val in range(1,n+1):
+                    if can_place_val(board, r, c, val, n):
                         possible_vals.append(val)
                 map[coord] = possible_vals
     return map
 
-# take in 9 by 9 array and list of tried squares
-def solve_array(board, guessed_boards, index):
-    map = find_possibilities(board)
+# take in n by n array and list of tried squares
+def solve_array(board, guessed_boards, index, n):
+    map = find_possibilities(board, n)
 
     # check if solved
     if len(map) == 0:
@@ -66,7 +70,7 @@ def solve_array(board, guessed_boards, index):
     # check if a square failed i.e. must backtrack
     if len(value) == 0 or len(value) < index+1:
         board, index = guessed_boards.pop()
-        return solve_array(board, guessed_boards, index)
+        return solve_array(board, guessed_boards, index, n)
     
      # if more than one value, add to guessed_boards for later
     if len(value) > 1:
@@ -76,7 +80,7 @@ def solve_array(board, guessed_boards, index):
     # try and put a value in the best possible square, return new board
     new_board = copy.deepcopy(board)
     new_board[row][col] = value[index]
-    return solve_array(new_board, guessed_boards, 0)
+    return solve_array(new_board, guessed_boards, 0, n)
 
 def main():
     # ensure 1 argument
@@ -105,7 +109,15 @@ if __name__ == "__main__":
             [0, 0, 0, 0, 5, 0, 6, 0, 4],
             [0, 0, 0, 2, 8, 0, 0, 3, 0]]
     
+    input2 = [[2, 0, 0, 0],
+              [0, 0, 0, 3],
+              [4, 0, 0, 0],
+              [0, 0, 0, 1]]
+    
     #print(can_place_val(input, 0, 0, 4))
     guessed_boards = []
-    final = (solve_array(input, guessed_boards, 0))
+    final = (solve_array(input, guessed_boards, 0, 9))
     print(final)
+
+    #print(check_square(input2, 0, 2, 3, 4))
+    
