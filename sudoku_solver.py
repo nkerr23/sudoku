@@ -1,2 +1,26 @@
 # input 9 by 9 array of nums
 # 0 = empty space
+
+import sys
+
+# take in 9 by 9 array
+def solve_array (board):
+    return 0
+
+def main():
+    # ensure 1 argument
+    if (len(sys.argv) != 2):
+        sys.exit("Incorrect number of arguments provided")
+        
+    # array must be 9x9 for this sudoku solver, return error if incorrect size
+    if len(sys.argv[1]) != 9:
+        sys.exit("Array is not the correct size, must be 9x9.")
+    for item in sys.argv[1]:
+        if (len(item) != 9):
+            sys.exit("Array is not the correct size, must be 9x9.")
+    
+
+
+
+if __name__ == "__main__":
+    main
