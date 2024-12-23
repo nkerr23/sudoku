@@ -25,8 +25,23 @@ def check_square (board, row, col, value):
                 return False
     return True
 
+# return true if can place the num in that square, false otherwise
+def can_place_val(board, row, col, value):
+    if check_row[board, row, value]:
+        if check_column[board, col, value]:
+            if check_square[board, row, col, value]:
+                return True
+    return False
+
 # take in 9 by 9 array
 def solve_array (board):
+    cur_val = 1
+    for row in board:
+        for col in board:
+            if board[row][col] == 0:
+                continue
+            else:
+                if (check_row[cur_val] and check_column[cur_val] and check_square[cur_val])
     # create function that adds checks what it can add to the first corner
     return 0
 
