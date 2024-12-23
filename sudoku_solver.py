@@ -11,7 +11,7 @@ def main():
     # ensure 1 argument
     if (len(sys.argv) != 2):
         sys.exit("Incorrect number of arguments provided")
-        
+
     # array must be 9x9 for this sudoku solver, return error if incorrect size
     if len(sys.argv[1]) != 9:
         sys.exit("Array is not the correct size, must be 9x9.")
@@ -19,8 +19,18 @@ def main():
         if (len(item) != 9):
             sys.exit("Array is not the correct size, must be 9x9.")
     
-
-
+    # run solver script
+    solve_array(sys.argv[1])
 
 if __name__ == "__main__":
-    main
+    input = [[0, 0, 0, 0, 1, 0, 0, 0, 0],
+             [0, 0, 8, 3, 0, 0, 0, 0, 0],
+             [0, 0, 9, 0, 0, 2, 0, 1, 3],
+             [2, 0, 0, 0, 4, 0, 7, 0, 0],
+             [0, 4, 0, 6, 3, 0, 0, 5, 0],
+             [9, 0, 0, 8, 0, 0, 0, 0, 0],
+             [0, 6, 0, 0, 0, 0, 0, 0, 1],
+             [0, 0, 0, 0, 5, 0, 6, 0, 4],
+             [0, 0, 0, 2, 8, 0, 0, 3, 0]]
+
+    # main
