@@ -4,6 +4,7 @@
 import sys
 import copy
 import math
+import ast
 
 # return true if item doesn't exist in row, false otherwise
 def check_row (board, row, value):
@@ -82,25 +83,34 @@ def solve_array(board, guessed_boards, index, n):
     new_board[row][col] = value[index]
     return solve_array(new_board, guessed_boards, 0, n)
 
-def main():
+def complete_sudoku():
     # ensure 1 argument
     if (len(sys.argv) != 2):
         sys.exit("Incorrect number of arguments provided")
 
+    # convert to list if string
+    if isinstance(sys.argv[1], str):
+        array = ast.literal_eval(sys.argv[1])
+    elif isinstance(sys.argv[1], list):
+        array = sys.argv[1]
+    else:
+        sys.exit("Incorrect argument type: must be list or list as string.")
+
     # array must be nxn (n is square) for this sudoku solver, return error if incorrect size
-    size = len(sys.argv[1])
+    size = len(array)
     root = math.sqrt(size)
     if not root.is_integer():
         sys.exit("Array size must be a square number.")
-    for item in sys.argv[1]:
+    for item in array:
         if len(item) != size:
             sys.exit("Array must be a square.")
     
     # run solver script
-    solve_array(sys.argv[1], [], size)
+    return solve_array(array, [], 0, size)
 
 if __name__ == "__main__":
-    main()
+    solved_puzzle = complete_sudoku()
+    print(solved_puzzle)
 
 '''
 input = [[0,0,0,0,1,0,0,0,0],[0,0,8,3,0,0,0,0,0],[0,0,9,0,0,2,0,1,3],[2,0,0,0,4,0,7,0,0],[0,4,0,6,3,0,0,5,0],[9,0,0,8,0,0,0,0,0],[0,6,0,0,0,0,0,0,1],[0,0,0,0,5,0,6,0,4],[0,0,0,2,8,0,0,3,0]]
