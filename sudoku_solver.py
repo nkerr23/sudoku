@@ -87,27 +87,23 @@ def main():
     if (len(sys.argv) != 2):
         sys.exit("Incorrect number of arguments provided")
 
-    # array must be 9x9 for this sudoku solver, return error if incorrect size
-    if len(sys.argv[1]) != 9:
-        sys.exit("Array is not the correct size, must be 9x9.")
+    # array must be nxn (n is square) for this sudoku solver, return error if incorrect size
+    size = len(sys.argv[1])
+    root = math.sqrt(size)
+    if not root.is_integer():
+        sys.exit("Array size must be a square number.")
     for item in sys.argv[1]:
-        if (len(item) != 9):
-            sys.exit("Array is not the correct size, must be 9x9.")
+        if len(item) != size:
+            sys.exit("Array must be a square.")
     
     # run solver script
-    solve_array(sys.argv[1])
+    solve_array(sys.argv[1], [], size)
 
 if __name__ == "__main__":
-    input = [
-            [0, 0, 0, 0, 1, 0, 0, 0, 0],
-            [0, 0, 8, 3, 0, 0, 0, 0, 0],
-            [0, 0, 9, 0, 0, 2, 0, 1, 3],
-            [2, 0, 0, 0, 4, 0, 7, 0, 0],
-            [0, 4, 0, 6, 3, 0, 0, 5, 0],
-            [9, 0, 0, 8, 0, 0, 0, 0, 0],
-            [0, 6, 0, 0, 0, 0, 0, 0, 1],
-            [0, 0, 0, 0, 5, 0, 6, 0, 4],
-            [0, 0, 0, 2, 8, 0, 0, 3, 0]]
+    main()
+
+'''
+input = [[0,0,0,0,1,0,0,0,0],[0,0,8,3,0,0,0,0,0],[0,0,9,0,0,2,0,1,3],[2,0,0,0,4,0,7,0,0],[0,4,0,6,3,0,0,5,0],[9,0,0,8,0,0,0,0,0],[0,6,0,0,0,0,0,0,1],[0,0,0,0,5,0,6,0,4],[0,0,0,2,8,0,0,3,0]]
     
     input2 = [[2, 0, 0, 0],
               [0, 0, 0, 3],
@@ -120,4 +116,6 @@ if __name__ == "__main__":
     print(final)
 
     #print(check_square(input2, 0, 2, 3, 4))
+'''
+    
     
